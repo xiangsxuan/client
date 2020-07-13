@@ -23,3 +23,6 @@ registerIcons({
   ...sidebarIcons,
   ...annotatorIcons,
 });
+
+import { setupPendingTimeoutCheck } from '../../test-util/timeout-check';
+setupPendingTimeoutCheck({ warn: true });
