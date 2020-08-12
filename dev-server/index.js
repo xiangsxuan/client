@@ -1,3 +1,5 @@
+/* global __dirname */
+
 'use strict';
 
 const fs = require('fs');
@@ -7,7 +9,7 @@ const Mustache = require('mustache');
 
 const { createServer, useSsl } = require('./create-server');
 
-const DOCUMENT_PATH = './test-documents/';
+const DOCUMENT_PATH = `${__dirname}/templates/`;
 const DOCUMENT_PATTERN = /\.mustache/;
 
 /**
@@ -88,7 +90,7 @@ function DevServer(port, config) {
       } else {
         content = injectClientScript(
           `${DOCUMENT_PATH}404.mustache`,
-          config.clientUrl,
+          config.clientUrl
         );
       }
       response.end(content);
