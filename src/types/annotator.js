@@ -47,6 +47,14 @@
  */
 
 /**
+ * @typedef InternalConfig
+ * @prop {Object.<string,Function>} [pluginClasses]
+ * @prop {unknown} [PDF]
+ * @prop {string} [subFrameIdentifier]
+ *   An ID associated with instances of annotator loaded in iframes
+ */
+
+/**
  * @typedef {Window & Globals} HypothesisWindow
  */
 

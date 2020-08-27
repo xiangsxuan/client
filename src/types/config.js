@@ -60,6 +60,27 @@
  */
 
 /**
+ * The current state of the client's sidebar frame.
+ *
+ * @typedef LayoutState
+ * @prop {boolean} expanded - Whether the sidebar is open or closed
+ * @prop {number} width - The width of the sidebar + toolbar
+ * @prop {number} height - The height of the sidebar
+ */
+
+/**
+ * @typedef AnnotatorConfig
+ * @prop {string} [assetRoot] -
+ *   Base URL to load assets from. This is set in the browser extension and used
+ *   by the boot script
+ * @prop {string} [clientUrl]
+ *   Internal. URL to load client from when injecting into iframes.
+ * @prop {string} [externalContainerSelector]
+ *   CSS selector that specifies external element to insert sidebar frame into.
+ * @prop {(ls: LayoutState) => any} [onLayoutChange]
+ */
+
+/**
  * Configuration set by the embedder of the client and used by the sidebar.
  *
  * This is the subset of keys from
@@ -67,9 +88,9 @@
  * excludes any keys used only by the "annotator" part of the application.
  *
  * @typedef HostConfig
- * @prop {string} [annotations] - Direct-linked annotation ID
- * @prop {string} [group] - Direct-linked group ID
- * @prop {string} [query] - Initial filter query
+ * @prop {string|null} [annotations] - Direct-linked annotation ID
+ * @prop {string|null} [group] - Direct-linked group ID
+ * @prop {string|null} [query] - Initial filter query
  * @prop {string} [appType] - Method used to load the client
  * @prop {boolean} [openSidebar] - Whether to open the sidebar on the initial load
  * @prop {boolean} [showHighlights] - Whether to show highlights

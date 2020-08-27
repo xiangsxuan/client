@@ -23,10 +23,19 @@ const defaultConfig = {
   },
 };
 
+/**
+ * @typedef {import('../types/config').HostConfig} HostConfig
+ * @typedef {import('../types/annotator').InternalConfig} InternalConfig
+ */
+
 export default class Sidebar extends Host {
+  /**
+   * @param {HTMLElement} element
+   * @param {HostConfig & InternalConfig} config
+   */
   constructor(element, config) {
     if (config.theme === 'clean' || config.externalContainerSelector) {
-      delete config.pluginClasses.BucketBar;
+      delete config.pluginClasses?.BucketBar;
     }
 
     super(element, { ...defaultConfig, ...config });
@@ -103,7 +112,7 @@ export default class Sidebar extends Host {
       [events.HELP_REQUESTED, this.onHelpRequest],
     ];
     eventHandlers.forEach(([event, handler]) => {
-      if (handler) {
+      if (typeof handler === 'function') {
         this.crossframe.on(event, () => handler());
       }
     });

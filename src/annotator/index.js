@@ -2,6 +2,8 @@
 
 /**
  * @typedef {import('../types/annotator').HypothesisWindow} HypothesisWindow
+ * @typedef {import('../types/annotator').InternalConfig} InternalConfig
+ * @typedef {import('../types/config').HostConfig} HostConfig
  */
 
 import $ from 'jquery';
@@ -55,6 +57,7 @@ const appLinkEl = /** @type {Element} */ (document.querySelector(
   'link[type="application/annotator+html"][rel="sidebar"]'
 ));
 
+/** @type {HostConfig & InternalConfig} */
 const config = configFrom(window);
 
 $.noConflict(true)(function () {

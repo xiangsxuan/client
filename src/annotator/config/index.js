@@ -5,6 +5,7 @@ import { toBoolean } from '../../shared/type-coercions';
  * Reads the Hypothesis configuration from the environment.
  *
  * @param {Window} window_ - The Window object to read config from.
+ * @return {import('../../types/config').HostConfig}
  */
 export default function configFrom(window_) {
   const settings = settingsFrom(window_);
