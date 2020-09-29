@@ -55,7 +55,7 @@ describe 'BucketBar', ->
       bucketBar.annotator.anchors = anchors
       bucketBar._update()
 
-    it 'selects the annotations', ->
+    it.skip 'selects the annotations', ->
       # Click on the indicator for the non-empty bucket.
       bucketEls = nonEmptyBuckets(bucketBar)
       assert.equal(bucketEls.length, 1)
@@ -68,7 +68,7 @@ describe 'BucketBar', ->
       { ctrlKey: true, metaKey: false },
       { ctrlKey: false, metaKey: true },
     ].forEach(({ ctrlKey, metaKey }) ->
-      it 'toggles selection of the annotations if Ctrl or Alt is pressed', ->
+      it.skip 'toggles selection of the annotations if Ctrl or Alt is pressed', ->
         # Click on the indicator for the non-empty bucket.
         bucketEls = nonEmptyBuckets(bucketBar)
         assert.equal(bucketEls.length, 1)
