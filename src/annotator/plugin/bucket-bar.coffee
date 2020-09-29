@@ -3,7 +3,7 @@ Plugin = require('../plugin')
 
 scrollIntoView = require('scroll-into-view')
 
-{ findClosestOffscreenAnchor, constructPositionPoints } = require('./bucket-bar-js')
+{ findClosestOffscreenAnchor, constructPositionPoints, buildBuckets } = require('./bucket-bar-js')
 
 highlighter = require('../highlighter')
 
@@ -82,6 +82,7 @@ module.exports = class BucketBar extends Plugin
 
   _update: ->
     {above, below, points } = constructPositionPoints(@annotator.anchors)
+    fakeBuckets = buildBuckets(points)
 
     # Accumulate the overlapping anchors into buckets.
     # The algorithm goes like this:
@@ -145,6 +146,11 @@ module.exports = class BucketBar extends Plugin
         anchors: []
         counts: []
         latest: 0
+
+    @buckets.forEach (bucket, bi) =>
+      console.assert(@index[bi] is fakeBuckets.index[bi], 'index positions are equal')
+      bucket.forEach (anchor, ai) =>
+        console.assert(anchor is fakeBuckets.buckets[bi][ai], 'anchors are the same')
 
     # Scroll up
     @buckets.unshift [], above, []
