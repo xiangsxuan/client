@@ -52,6 +52,23 @@ function nearestPositionedAncestor(el) {
 }
 
 /**
+ * Recursively find the greatest z-index for this element and its parents
+ *
+ * @param {Element|null|undefined} element - element that has the current selection
+ * @return {number}
+ */
+export function findGreatestZindex(element) {
+  if (!element) {
+    return 0;
+  }
+  const value = +getComputedStyle(element).zIndex; // is NaN when value is 'auto'
+  const zIndex = Number.isNaN(value) ? 0 : value;
+
+  const parentZindex = findGreatestZindex(element.parentElement);
+  return Math.max(zIndex, parentZindex);
+}
+
+/**
  * @typedef AdderOptions
  * @prop {() => any} onAnnotate - Callback invoked when "Annotate" button is clicked
  * @prop {() => any} onHighlight - Callback invoked when "Highlight" button is clicked
@@ -89,10 +106,6 @@ export class Adder {
       // take position out of layout flow initially
       position: 'absolute',
       top: 0,
-
-      // Assign a high Z-index so that the adder shows above any content on the
-      // page
-      zIndex: 10000,
     });
 
     this._view = /** @type {Window} */ (container.ownerDocument.defaultView);
@@ -199,8 +212,9 @@ export class Adder {
    *
    * @param {number} left - Horizontal offset from left edge of viewport.
    * @param {number} top - Vertical offset from top edge of viewport.
+   * @param {number} zIndex - Z-index so that the adder shows above any page content.
    */
-  showAt(left, top, arrowDirection) {
+  showAt(left, top, arrowDirection, zIndex = 10000) {
     // Translate the (left, top) viewport coordinates into positions relative to
     // the adder's nearest positioned ancestor (NPA).
     //
@@ -213,6 +227,7 @@ export class Adder {
     Object.assign(this._container.style, {
       top: toPx(top - parentRect.top),
       left: toPx(left - parentRect.left),
+      zIndex,
     });
 
     this._isVisible = true;

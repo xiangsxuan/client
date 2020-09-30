@@ -82,7 +82,10 @@ describe('Guest', () => {
     guestConfig.pluginClasses.CrossFrame = CrossFrame;
 
     $imports.$mock({
-      './adder': { Adder: FakeAdder },
+      './adder': {
+        Adder: FakeAdder,
+        findGreatestZindex: sinon.stub().returns(0),
+      },
       './anchoring/html': htmlAnchoring,
       './highlighter': highlighter,
       './range-util': rangeUtil,

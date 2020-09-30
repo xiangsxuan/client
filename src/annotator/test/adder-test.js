@@ -1,6 +1,13 @@
+import { mount } from 'enzyme';
+import { createElement } from 'preact';
 import { act } from 'preact/test-utils';
 
-import { Adder, ARROW_POINTING_UP, ARROW_POINTING_DOWN } from '../adder';
+import {
+  Adder,
+  ARROW_POINTING_UP,
+  ARROW_POINTING_DOWN,
+  findGreatestZindex,
+} from '../adder';
 
 function rect(left, top, width, height) {
   return { left: left, top: top, width: width, height: height };
@@ -23,6 +30,53 @@ function revertOffsetElement(el) {
   el.style.left = '0';
   el.style.top = '0';
 }
+
+describe('findGreatestZindex', () => {
+  let container;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    container.remove();
+  });
+
+  it('returns zero z-index (default value) if no element is passed)', () => {
+    assert.strictEqual(findGreatestZindex(undefined), 0);
+    assert.strictEqual(findGreatestZindex(null), 0);
+  });
+
+  it('returns z-index', () => {
+    // For chrome >=85 getComputedStyle reports the zIndex when it is set, doesn't matter if it used.
+    // For chrome <85 getComputedStyle reports the zIndex only when it is used.
+    // To make the test pass on both version zIndex is made usable by setting the position.
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=1023232
+    const wrapper = mount(
+      <div className="parent" style={{ zIndex: 10, position: 'relative' }}>
+        <div
+          className="dummyChild"
+          style={{ zIndex: 20, position: 'relative' }}
+        />
+        <div className="child1" style={{ zIndex: 5, position: 'relative' }} />
+        <div className="child2" style={{ zIndex: 15, position: 'relative' }} />
+      </div>,
+      { attachTo: container }
+    );
+
+    const parent = wrapper.find('.parent').getDOMNode();
+    assert.strictEqual(findGreatestZindex(parent), 10);
+
+    const child1 = wrapper.find('.child1').getDOMNode();
+    assert.strictEqual(findGreatestZindex(child1), 10);
+
+    const child2 = wrapper.find('.child2').getDOMNode();
+    assert.strictEqual(findGreatestZindex(child2), 15);
+
+    wrapper.unmount();
+  });
+});
 
 // nb. These tests currently cover the `AdderToolbar` Preact component as well
 // as the `Adder` container. The tests for `AdderToolbar` should be moved into

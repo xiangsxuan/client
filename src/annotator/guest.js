@@ -2,7 +2,7 @@ import CustomEvent from 'custom-event';
 import scrollIntoView from 'scroll-into-view';
 
 import Delegator from './delegator';
-import { Adder } from './adder';
+import { Adder, findGreatestZindex } from './adder';
 
 // @ts-expect-error - Module is CoffeeScript
 import * as htmlAnchoring from './anchoring/html';
@@ -557,7 +557,16 @@ export default class Guest extends Delegator {
       isBackwards
     );
     this.adderCtrl.annotationsForSelection = annotationsForSelection();
-    this.adderCtrl.showAt(left, top, arrowDirection);
+    // Find the zIndex of two close by element and use the greatest.
+    const zIndex1 =
+      findGreatestZindex(document.elementFromPoint(left, top)) + 1;
+    const zIndex2 = findGreatestZindex(selection.focusNode?.parentElement) + 1;
+    this.adderCtrl.showAt(
+      left,
+      top,
+      arrowDirection,
+      Math.max(zIndex1, zIndex2)
+    );
   }
 
   _onClearSelection() {
