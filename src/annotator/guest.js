@@ -4,9 +4,10 @@ import scrollIntoView from 'scroll-into-view';
 import Delegator from './delegator';
 import { Adder } from './adder';
 
-// @ts-expect-error - Module is CoffeeScript
-import * as htmlAnchoring from './anchoring/html';
-
+import {
+  anchor as htmlAnchor,
+  describe as htmlDescribe,
+} from './anchoring/html';
 import { sniff } from './anchoring/range';
 import {
   getHighlightsContainingNode,
@@ -71,7 +72,7 @@ function annotationsAt(node) {
 const IGNORE_SELECTOR = '[class^="annotator-"],[class^="hypothesis-"]';
 
 export default class Guest extends Delegator {
-  constructor(element, config, anchoring = htmlAnchoring) {
+  constructor(element, config) {
     const defaultConfig = {
       // This causes the `Document` plugin to be initialized.
       Document: {},
@@ -118,8 +119,6 @@ export default class Guest extends Delegator {
     // Set the frame identifier if it's available.
     // The "top" guest instance will have this as null since it's in a top frame not a sub frame
     this.frameIdentifier = config.subFrameIdentifier || null;
-
-    this.anchoring = anchoring;
 
     const cfOptions = {
       config,
@@ -357,12 +356,7 @@ export default class Guest extends Delegator {
         return Promise.resolve({ annotation, target });
       }
 
-      // Find a target using the anchoring module.
-      const options = {
-        ignoreSelector: IGNORE_SELECTOR,
-      };
-      return this.anchoring
-        .anchor(root, target.selector, options)
+      return htmlAnchor(root, target.selector)
         .then(range => ({
           annotation,
           target,
@@ -484,7 +478,7 @@ export default class Guest extends Delegator {
         ignoreSelector: IGNORE_SELECTOR,
       };
       // Returns an array of selectors for the passed range.
-      return this.anchoring.describe(root, range, options);
+      return htmlDescribe(root, range, options);
     };
 
     const setDocumentInfo = info => {
